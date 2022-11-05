@@ -70,4 +70,74 @@ router.post("/cats", (req: Request, res: Response) => {
   }
 });
 
+//고양이 데이터 수정
+router.put("/cats:id", (req: Request, res: Response) => {
+  try {
+    const params = req.params;
+    const body = req.body;
+    let result;
+    Cat.map((cat) => {
+      if (cat.id === params.id) {
+        cat = body;
+        result = cat;
+      }
+    });
+    res.status(200).send({
+      success: true,
+      data: {
+        cat: result,
+      },
+    });
+  } catch (error: any) {
+    res.status(400).send({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+//고양이 데이터 부분적으로 업데이트
+router.patch("/cats:id", (req: Request, res: Response) => {
+  try {
+    const params = req.params;
+    const body = req.body;
+    let result;
+    Cat.map((cat) => {
+      if (cat.id === params.id) {
+        cat = { ...cat, ...body };
+        result = cat;
+      }
+    });
+    res.status(200).send({
+      success: true,
+      data: {
+        cat: result,
+      },
+    });
+  } catch (error: any) {
+    res.status(400).send({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
+//고양이 데이터 삭제
+router.delete("/cats:id", (req: Request, res: Response) => {
+  try {
+    const params = req.params;
+    const newCat = Cat.filter((cat) => cat.id !== params.id);
+
+    res.status(200).send({
+      success: true,
+      data: newCat,
+    });
+  } catch (error: any) {
+    res.status(400).send({
+      success: false,
+      error: error.message,
+    });
+  }
+});
+
 export default router;
